@@ -12,8 +12,12 @@ export default function EmployerDashboard({ userId }) {
 
   const fetchTasks = () => {
     fetch('http://127.0.0.1:8000/tasks/')
-      .then(res => res.json())
-      .then(data => setTasks(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(data => setTasks(data))
+      .catch(err => console.error("Could not fetch tasks. Is the backend running?"));
   };
 
   useEffect(() => {
@@ -29,12 +33,19 @@ export default function EmployerDashboard({ userId }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description, priority, assigned_to: parseInt(assignedTo) })
     })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
     .then(() => {
       fetchTasks();
       setTitle('');
       setDescription('');
       showToast(`Task "${title}" assigned successfully!`);
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Failed to create task. Please ensure the backend server is running on port 8000.");
     });
   };
 

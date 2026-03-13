@@ -7,8 +7,12 @@ export default function HRDashboard({ userId }) {
 
   const fetchTasks = () => {
     fetch(`http://127.0.0.1:8000/tasks/?assigned_to=${userId}`)
-      .then(res => res.json())
-      .then(data => setTasks(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(data => setTasks(data))
+      .catch(err => console.error("Could not fetch tasks. Is the backend running?"));
   };
 
   useEffect(() => {
@@ -19,9 +23,14 @@ export default function HRDashboard({ userId }) {
 
   const updateTaskStatus = (taskId, action, taskTitle) => {
     fetch(`http://127.0.0.1:8000/tasks/${taskId}/${action}`, { method: 'PATCH' })
-      .then(() => {
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
         fetchTasks();
         showToast(action === 'start' ? `Started: ${taskTitle}` : `Completed: ${taskTitle}`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to update status. Please ensure the backend server is running on port 8000.");
       });
   };
 
