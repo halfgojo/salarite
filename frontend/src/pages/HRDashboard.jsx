@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ActivityFeed from '../components/ActivityFeed';
-import { PlayCircle, CheckCircle2, ClipboardList, TrendingUp, Clock, BarChart3, Inbox } from 'lucide-react';
+import { PlayCircle, CheckCircle2, ClipboardList, Clock, BarChart3, Inbox } from 'lucide-react';
 
 export default function HRDashboard({ userId }) {
   const [tasks, setTasks] = useState([]);
@@ -42,20 +42,10 @@ export default function HRDashboard({ userId }) {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const getStatusBadge = (status) => {
-    if (status === 'Completed') return <span className="badge badge-completed">✓ Completed</span>;
-    if (status === 'In Progress') return <span className="badge badge-inprogress">● In Progress</span>;
-    return <span className="badge badge-pending">○ Pending</span>;
-  };
-
-  const stats = {
-    total: tasks.length,
-    inProgress: tasks.filter(t => t.status === 'In Progress').length,
-    completed: tasks.filter(t => t.status === 'Completed').length,
-    pending: tasks.filter(t => t.status === 'Pending').length,
-  };
-
-  const completionRate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+  const completed = tasks.filter(t => t.status === 'Completed').length;
+  const inProgress = tasks.filter(t => t.status === 'In Progress').length;
+  const pending = tasks.filter(t => t.status === 'Pending').length;
+  const completionRate = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
 
   return (
     <div className="animate-fadeIn">
@@ -67,61 +57,41 @@ export default function HRDashboard({ userId }) {
       )}
 
       <div className="page-header">
-        <h1>Virtual HR Dashboard</h1>
+        <h1>My Workspace</h1>
       </div>
 
-      {/* Stat Cards */}
-      <div className="stat-grid">
-        <div className="stat-card total">
-          <div className="stat-icon total"><ClipboardList size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value">{stats.total}</div>
-            <div className="stat-label">Assigned Tasks</div>
+      {/* My Progress — unique to HR */}
+      <div className="card mb-6" style={{ padding: '1.5rem' }}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <BarChart3 size={18} color="var(--primary)" />
+            <span style={{ fontWeight: 700, fontSize: '1rem' }}>My Progress</span>
           </div>
+          <span style={{ fontWeight: 800, fontSize: '1.5rem', color: 'var(--primary)' }}>{completionRate}%</span>
         </div>
-        <div className="stat-card inprogress">
-          <div className="stat-icon inprogress"><TrendingUp size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#D97706' }}>{stats.inProgress}</div>
-            <div className="stat-label">In Progress</div>
+        <div className="progress-bar-container" style={{ height: 10 }}>
+          <div className="progress-bar-fill" style={{ width: `${completionRate}%`, height: '100%' }}></div>
+        </div>
+        <div className="flex gap-6 mt-4">
+          <div className="flex items-center gap-2">
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#D97706' }}></div>
+            <span className="text-sm"><strong>{inProgress}</strong> In Progress</span>
           </div>
-        </div>
-        <div className="stat-card completed">
-          <div className="stat-icon completed"><CheckCircle2 size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#059669' }}>{stats.completed}</div>
-            <div className="stat-label">Completed</div>
+          <div className="flex items-center gap-2">
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#059669' }}></div>
+            <span className="text-sm"><strong>{completed}</strong> Completed</span>
           </div>
-        </div>
-        <div className="stat-card pending">
-          <div className="stat-icon pending"><Clock size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#6B7280' }}>{stats.pending}</div>
-            <div className="stat-label">Pending</div>
+          <div className="flex items-center gap-2">
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#9CA3AF' }}></div>
+            <span className="text-sm"><strong>{pending}</strong> Pending</span>
           </div>
         </div>
       </div>
-
-      {/* Progress Bar */}
-      {stats.total > 0 && (
-        <div className="card mb-6" style={{ padding: '1.25rem 1.5rem' }}>
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <BarChart3 size={16} color="var(--primary)" />
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>My Progress</span>
-            </div>
-            <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.875rem' }}>{completionRate}%</span>
-          </div>
-          <div className="progress-bar-container">
-            <div className="progress-bar-fill" style={{ width: `${completionRate}%` }}></div>
-          </div>
-        </div>
-      )}
 
       {/* Main Grid */}
       <div className="dashboard-grid">
-        <div className="flex flex-col gap-6">
-          {/* Task Table */}
+        <div>
+          {/* Task List with Actions */}
           <div className="card">
             <div className="card-header">
               <div className="card-title">
@@ -164,20 +134,24 @@ export default function HRDashboard({ userId }) {
                         )}
                       </td>
                       <td><span className={`badge badge-${t.priority.toLowerCase()}`}>{t.priority}</span></td>
-                      <td>{getStatusBadge(t.status)}</td>
+                      <td>
+                        {t.status === 'Completed' && <span className="badge badge-completed">✓ Done</span>}
+                        {t.status === 'In Progress' && <span className="badge badge-inprogress">● Active</span>}
+                        {t.status === 'Pending' && <span className="badge badge-pending">○ Waiting</span>}
+                      </td>
                       <td style={{ textAlign: 'right' }}>
                         {t.status === 'Pending' && (
-                          <button className="btn btn-primary btn-sm" onClick={() => updateTaskStatus(t.id, 'start', t.title)}>
+                          <button className="btn btn-primary btn-sm btn-action-hover" onClick={() => updateTaskStatus(t.id, 'start', t.title)}>
                             <PlayCircle size={14} /> Start
                           </button>
                         )}
                         {t.status === 'In Progress' && (
-                          <button className="btn btn-success btn-sm" onClick={() => updateTaskStatus(t.id, 'complete', t.title)}>
+                          <button className="btn btn-success btn-sm btn-action-hover" onClick={() => updateTaskStatus(t.id, 'complete', t.title)}>
                             <CheckCircle2 size={14} /> Complete
                           </button>
                         )}
                         {t.status === 'Completed' && (
-                          <span className="text-xs text-muted" style={{ fontStyle: 'italic' }}>Done</span>
+                          <span className="text-xs text-muted" style={{ fontStyle: 'italic' }}>—</span>
                         )}
                       </td>
                     </tr>

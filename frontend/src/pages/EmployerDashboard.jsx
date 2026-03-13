@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ActivityFeed from '../components/ActivityFeed';
-import { PlusCircle, ListTodo, TrendingUp, CheckCircle2, Clock, BarChart3, Inbox } from 'lucide-react';
+import { PlusCircle, ListTodo, Users, CheckCircle2, Clock, Inbox, TrendingUp } from 'lucide-react';
 
 export default function EmployerDashboard({ userId }) {
   const [tasks, setTasks] = useState([]);
@@ -64,14 +64,19 @@ export default function EmployerDashboard({ userId }) {
     return <span className="badge badge-pending">○ Pending</span>;
   };
 
-  const stats = {
-    total: tasks.length,
-    inProgress: tasks.filter(t => t.status === 'In Progress').length,
-    completed: tasks.filter(t => t.status === 'Completed').length,
-    pending: tasks.filter(t => t.status === 'Pending').length,
-  };
+  // Team breakdown
+  const hr1Tasks = tasks.filter(t => t.assigned_to === 2);
+  const hr2Tasks = tasks.filter(t => t.assigned_to === 3);
 
-  const completionRate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+  const getHRStats = (hrTasks) => ({
+    total: hrTasks.length,
+    completed: hrTasks.filter(t => t.status === 'Completed').length,
+    inProgress: hrTasks.filter(t => t.status === 'In Progress').length,
+    pending: hrTasks.filter(t => t.status === 'Pending').length,
+  });
+
+  const hr1Stats = getHRStats(hr1Tasks);
+  const hr2Stats = getHRStats(hr2Tasks);
 
   return (
     <div className="animate-fadeIn">
@@ -86,107 +91,111 @@ export default function EmployerDashboard({ userId }) {
         <h1>Employer Dashboard</h1>
       </div>
 
-      {/* Stat Cards */}
-      <div className="stat-grid">
-        <div className="stat-card total">
-          <div className="stat-icon total"><ListTodo size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value">{stats.total}</div>
-            <div className="stat-label">Total Tasks</div>
+      {/* Team Overview — unique to Employer */}
+      <div className="card mb-6">
+        <div className="card-header">
+          <div className="card-title">
+            <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EDE9FE, #DDD6FE)', color: '#7C3AED' }}>
+              <Users size={16} />
+            </div>
+            Team Overview
           </div>
+          <span className="badge badge-scheduled">{tasks.length} total tasks</span>
         </div>
-        <div className="stat-card inprogress">
-          <div className="stat-icon inprogress"><TrendingUp size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#D97706' }}>{stats.inProgress}</div>
-            <div className="stat-label">In Progress</div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {/* HR 1 Card */}
+          <div style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--border-light)' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-light), var(--secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.625rem', fontWeight: 700 }}>HR</div>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Virtual HR 1</span>
+            </div>
+            <div className="flex gap-3 mt-2" style={{ flexWrap: 'wrap' }}>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '1rem' }}>{hr1Stats.total}</span> <span className="text-muted">assigned</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#D97706', fontSize: '1rem' }}>{hr1Stats.inProgress}</span> <span className="text-muted">active</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#059669', fontSize: '1rem' }}>{hr1Stats.completed}</span> <span className="text-muted">done</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#6B7280', fontSize: '1rem' }}>{hr1Stats.pending}</span> <span className="text-muted">pending</span></div>
+            </div>
+            {hr1Stats.total > 0 && (
+              <div className="progress-bar-container" style={{ marginTop: '0.75rem' }}>
+                <div className="progress-bar-fill" style={{ width: `${Math.round((hr1Stats.completed / hr1Stats.total) * 100)}%` }}></div>
+              </div>
+            )}
           </div>
-        </div>
-        <div className="stat-card completed">
-          <div className="stat-icon completed"><CheckCircle2 size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#059669' }}>{stats.completed}</div>
-            <div className="stat-label">Completed</div>
-          </div>
-        </div>
-        <div className="stat-card pending">
-          <div className="stat-icon pending"><Clock size={22} /></div>
-          <div className="stat-info">
-            <div className="stat-value" style={{ color: '#6B7280' }}>{stats.pending}</div>
-            <div className="stat-label">Pending</div>
+
+          {/* HR 2 Card */}
+          <div style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--border-light)' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.625rem', fontWeight: 700 }}>HR</div>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Virtual HR 2</span>
+            </div>
+            <div className="flex gap-3 mt-2" style={{ flexWrap: 'wrap' }}>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '1rem' }}>{hr2Stats.total}</span> <span className="text-muted">assigned</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#D97706', fontSize: '1rem' }}>{hr2Stats.inProgress}</span> <span className="text-muted">active</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#059669', fontSize: '1rem' }}>{hr2Stats.completed}</span> <span className="text-muted">done</span></div>
+              <div className="text-xs"><span style={{ fontWeight: 700, color: '#6B7280', fontSize: '1rem' }}>{hr2Stats.pending}</span> <span className="text-muted">pending</span></div>
+            </div>
+            {hr2Stats.total > 0 && (
+              <div className="progress-bar-container" style={{ marginTop: '0.75rem' }}>
+                <div className="progress-bar-fill" style={{ width: `${Math.round((hr2Stats.completed / hr2Stats.total) * 100)}%`, background: 'linear-gradient(90deg, #F59E0B, #D97706)' }}></div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      {stats.total > 0 && (
-        <div className="card mb-6" style={{ padding: '1.25rem 1.5rem' }}>
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <BarChart3 size={16} color="var(--primary)" />
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Overall Completion</span>
+      {/* Create Task Modal */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)', width: 32, height: 32, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 8 }}>
+                <PlusCircle size={16} />
+              </div>
+              Create New Task
             </div>
-            <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.875rem' }}>{completionRate}%</span>
-          </div>
-          <div className="progress-bar-container">
-            <div className="progress-bar-fill" style={{ width: `${completionRate}%` }}></div>
+            <div className="modal-body">
+              <form onSubmit={handleCreateTask}>
+                <div className="form-group">
+                  <label className="form-label">Task Title</label>
+                  <input required className="form-control" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Screen React Developer" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Description</label>
+                  <textarea className="form-control" value={description} onChange={e => setDescription(e.target.value)} rows="2" placeholder="Describe the task requirements..."></textarea>
+                </div>
+                <div className="flex gap-4">
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Priority</label>
+                    <select className="form-control" value={priority} onChange={e => setPriority(e.target.value)}>
+                      <option value="High">🔴 High</option>
+                      <option value="Medium">🟡 Medium</option>
+                      <option value="Low">🔵 Low</option>
+                    </select>
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Assign To</label>
+                    <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)}>
+                      <option value={2}>Virtual HR 1</option>
+                      <option value={3}>Virtual HR 2</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex justify-between mt-4">
+                  <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">
+                    <PlusCircle size={18} /> Assign Task
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Main Grid */}
+      {/* Main Grid: Task List + Activity Feed */}
       <div className="dashboard-grid">
-        <div className="flex flex-col gap-6">
-          {/* Create Task Modal */}
-          {isModalOpen && (
-            <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-              <div className="modal-content" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
-                  <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)', width: 32, height: 32, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 8 }}>
-                    <PlusCircle size={16} />
-                  </div>
-                  Create New Task
-                </div>
-                <div className="modal-body">
-                  <form onSubmit={handleCreateTask}>
-                    <div className="form-group">
-                      <label className="form-label">Task Title</label>
-                      <input required className="form-control" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Screen React Developer" />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Description</label>
-                      <textarea className="form-control" value={description} onChange={e => setDescription(e.target.value)} rows="2" placeholder="Describe the task requirements..."></textarea>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="form-group" style={{ flex: 1 }}>
-                        <label className="form-label">Priority</label>
-                        <select className="form-control" value={priority} onChange={e => setPriority(e.target.value)}>
-                          <option value="High">🔴 High</option>
-                          <option value="Medium">🟡 Medium</option>
-                          <option value="Low">🔵 Low</option>
-                        </select>
-                      </div>
-                      <div className="form-group" style={{ flex: 1 }}>
-                        <label className="form-label">Assign To</label>
-                        <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)}>
-                          <option value={2}>Virtual HR 1</option>
-                          <option value={3}>Virtual HR 2</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="flex justify-between mt-4">
-                      <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                      <button type="submit" className="btn btn-primary">
-                        <PlusCircle size={18} /> Assign Task
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Task List */}
+        <div>
           <div className="card">
             <div className="card-header">
               <div className="card-title">
@@ -229,7 +238,7 @@ export default function EmployerDashboard({ userId }) {
                       </td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-light), var(--secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.625rem', fontWeight: 700 }}>HR</div>
+                          <div style={{ width: 28, height: 28, borderRadius: '50%', background: t.assigned_to === 2 ? 'linear-gradient(135deg, var(--primary-light), var(--secondary))' : 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.625rem', fontWeight: 700 }}>HR</div>
                           <span className="text-sm">Virtual HR {t.assigned_to === 2 ? '1' : '2'}</span>
                         </div>
                       </td>
