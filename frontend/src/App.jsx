@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
-import { Briefcase, Users, UserCircle, Calendar, LogOut, LayoutDashboard, ClipboardList, Zap, MessageCircle, Video, User, Bell, Search, FileText, ArrowUp } from 'lucide-react';
+import { Briefcase, Users, UserCircle, Calendar, LogOut, LayoutDashboard, ClipboardList, Zap, MessageCircle, Video, User, Bell, Search, FileText, ArrowUp, Menu, X } from 'lucide-react';
 
 import EmployerDashboard from './pages/EmployerDashboard';
 import HRDashboard from './pages/HRDashboard';
@@ -16,6 +16,7 @@ import CandidateNotifications from './pages/CandidateNotifications';
 function App() {
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (!role) {
     return (
@@ -67,7 +68,22 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-container">
-        <Sidebar role={role} onLogout={() => { setRole(null); setUserId(null); }} />
+        <button 
+          className="mobile-menu-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        <div 
+          className={`sidebar-overlay ${isMobileMenuOpen ? 'open' : ''}`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        <Sidebar 
+          role={role} 
+          onLogout={() => { setRole(null); setUserId(null); }} 
+          isOpen={isMobileMenuOpen}
+          setIsOpen={setIsMobileMenuOpen}
+        />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Navigate to={role === 'employer' ? '/employer' : role === 'hr' ? '/hr' : '/profile'} replace />} />
@@ -184,7 +200,7 @@ function ScrollToTop() {
   );
 }
 
-function Sidebar({ role, onLogout }) {
+function Sidebar({ role, onLogout, isOpen, setIsOpen }) {
   const location = useLocation();
 
   const employerLinks = [
@@ -216,7 +232,7 @@ function Sidebar({ role, onLogout }) {
   else if (role === 'candidate') { userName = 'Alice (Candidate)'; initials = 'AC'; }
 
   return (
-    <nav className="sidebar">
+    <nav className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-brand">
         <div className="sidebar-brand-icon">
           <Zap size={20} />
@@ -232,6 +248,7 @@ function Sidebar({ role, onLogout }) {
         <Link
           key={link.to}
           to={link.to}
+          onClick={() => setIsOpen(false)}
           className={`nav-link ${location.pathname === link.to ? 'active' : ''}`}
         >
           {link.icon}
