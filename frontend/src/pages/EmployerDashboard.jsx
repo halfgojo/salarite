@@ -10,8 +10,10 @@ export default function EmployerDashboard({ userId }) {
   const [assignedTo, setAssignedTo] = useState(2);
   const [toast, setToast] = useState(null);
 
+  const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
   const fetchTasks = () => {
-    fetch('http://127.0.0.1:8000/tasks/')
+    fetch(`${API_URL}/tasks/`)
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -28,7 +30,7 @@ export default function EmployerDashboard({ userId }) {
 
   const handleCreateTask = (e) => {
     e.preventDefault();
-    fetch('http://127.0.0.1:8000/tasks/', {
+    fetch(`${API_URL}/tasks/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description, priority, assigned_to: parseInt(assignedTo) })

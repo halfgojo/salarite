@@ -44,6 +44,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  overflow: hidden; /* Prevent full page double scroll since main-content handles it */
 }
 
 a { text-decoration: none; color: inherit; }
@@ -232,6 +233,34 @@ p { color: var(--text-secondary); font-size: 0.9375rem; }
   padding: 2rem 2.5rem;
   overflow-y: auto;
   max-height: 100vh;
+  position: relative;
+}
+
+/* Custom internal scrollbars for main area and tables */
+.main-content::-webkit-scrollbar,
+.card > div[style*="overflow-x: auto"]::-webkit-scrollbar,
+.activity-feed::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.main-content::-webkit-scrollbar-track,
+.card > div[style*="overflow-x: auto"]::-webkit-scrollbar-track,
+.activity-feed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.card > div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb,
+.activity-feed::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 999px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover,
+.card > div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb:hover,
+.activity-feed::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 .page-header {

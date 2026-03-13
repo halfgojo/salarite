@@ -13,8 +13,10 @@ export default function ScheduleInterview({ userId }) {
   const [toast, setToast] = useState(null);
   const [showEmailPreview, setShowEmailPreview] = useState(null);
 
+  const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
   const fetchInterviews = () => {
-    fetch('http://127.0.0.1:8000/interviews/')
+    fetch(`${API_URL}/interviews/`)
       .then(res => res.json())
       .then(data => setInterviews(data));
   };
@@ -23,7 +25,7 @@ export default function ScheduleInterview({ userId }) {
 
   const handleSchedule = (e) => {
     e.preventDefault();
-    fetch('http://127.0.0.1:8000/interviews/', {
+    fetch(`${API_URL}/interviews/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

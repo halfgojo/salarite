@@ -5,8 +5,10 @@ export default function HRDashboard({ userId }) {
   const [tasks, setTasks] = useState([]);
   const [toast, setToast] = useState(null);
 
+  const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
   const fetchTasks = () => {
-    fetch(`http://127.0.0.1:8000/tasks/?assigned_to=${userId}`)
+    fetch(`${API_URL}/tasks/?assigned_to=${userId}`)
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -22,7 +24,7 @@ export default function HRDashboard({ userId }) {
   }, [userId]);
 
   const updateTaskStatus = (taskId, action, taskTitle) => {
-    fetch(`http://127.0.0.1:8000/tasks/${taskId}/${action}`, { method: 'PATCH' })
+    fetch(`${API_URL}/tasks/${taskId}/${action}`, { method: 'PATCH' })
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         fetchTasks();

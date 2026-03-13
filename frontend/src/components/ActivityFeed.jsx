@@ -6,12 +6,14 @@ export default function ActivityFeed() {
   const feedRef = useRef(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/activity')
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+    fetch(`${API_URL}/activity`)
       .then(res => res.json())
       .then(data => setLogs(data))
       .catch(console.error);
 
-    const ws = new WebSocket('ws://127.0.0.1:8000/activity/ws');
+    const WS_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://127.0.0.1:8000';
+    const ws = new WebSocket(`${WS_URL}/activity/ws`);
     ws.onmessage = (event) => {
       const newLog = JSON.parse(event.data);
       setLogs(prev => [newLog, ...prev]);
