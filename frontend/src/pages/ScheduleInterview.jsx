@@ -138,7 +138,6 @@ export default function ScheduleInterview({ userId }) {
 
       <div className="page-header">
         <h1>Interview Scheduler</h1>
-        <p>Schedule & conduct candidate interviews on Salarite's built-in meet — no external platforms needed.</p>
       </div>
 
       {/* Stats */}

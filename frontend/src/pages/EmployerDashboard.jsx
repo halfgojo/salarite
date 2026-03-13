@@ -82,7 +82,6 @@ export default function EmployerDashboard({ userId }) {
 
       <div className="page-header">
         <h1>Employer Dashboard</h1>
-        <p>Manage tasks, track Virtual HR performance, and monitor activity in real-time.</p>
       </div>
 
       {/* Stat Cards */}

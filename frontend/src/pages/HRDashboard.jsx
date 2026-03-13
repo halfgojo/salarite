@@ -67,7 +67,6 @@ export default function HRDashboard({ userId }) {
 
       <div className="page-header">
         <h1>Virtual HR Dashboard</h1>
-        <p>View your assigned tasks, update progress, and schedule interviews.</p>
       </div>
 
       {/* Stat Cards */}
