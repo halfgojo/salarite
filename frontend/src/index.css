@@ -802,8 +802,9 @@ tbody tr:last-child td { border-bottom: none; }
   flex-shrink: 0;
 }
 
-.login-btn-employer .login-btn-icon { background: rgba(255,255,255,0.2); }
+.login-btn-employer .login-btn-icon { background: rgba(255,255,255,0.2); color: white; }
 .login-btn-hr .login-btn-icon { background: var(--border-light); color: var(--primary); }
+.login-btn-candidate .login-btn-icon { background: var(--border-light); color: var(--primary); }
 
 .login-footer {
   margin-top: 2rem;

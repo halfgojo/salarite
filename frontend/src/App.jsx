@@ -45,7 +45,7 @@ function App() {
             </div>
           </button>
 
-          <button className="login-btn" onClick={() => { setRole('candidate'); setUserId(4); }} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', color: 'var(--text-1)', marginTop: '0.5rem' }}>
+          <button className="login-btn login-btn-candidate" onClick={() => { setRole('candidate'); setUserId(4); }} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', color: 'var(--text-1)', marginTop: '0.5rem' }}>
             <span className="login-btn-icon"><User size={20} /></span>
             <div style={{ textAlign: 'left' }}>
               <div>Login as Candidate</div>
