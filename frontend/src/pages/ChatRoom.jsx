@@ -13,14 +13,17 @@ export default function ChatRoom({ userId, userName, userRole }) {
   };
 
   useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+    const WS_URL = API_URL.replace(/^http/, 'ws');
+
     // Fetch existing messages
-    fetch('http://127.0.0.1:8000/chat/messages')
+    fetch(`${API_URL}/chat/messages`)
       .then(res => res.json())
       .then(data => setMessages(data))
       .catch(console.error);
 
     // Connect via WebSocket
-    const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws/${userId}`);
+    const ws = new WebSocket(`${WS_URL}/chat/ws/${userId}`);
     
     ws.onopen = () => setConnected(true);
     ws.onclose = () => setConnected(false);
