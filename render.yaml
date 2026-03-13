@@ -14,7 +14,6 @@ services:
   - type: web
     name: salarite-frontend
     env: static
-    region: ohio
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: frontend/dist
     envVars:
