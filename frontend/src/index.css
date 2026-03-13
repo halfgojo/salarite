@@ -553,6 +553,12 @@ tbody tr { transition: background-color 0.15s ease; }
 tbody tr:hover { background-color: #FAFBFC; }
 tbody tr:last-child td { border-bottom: none; }
 
+/* Apply vertical scrollbars natively to the tables */
+.card > div[style*="overflow-x: auto"] {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 /* ===== Progress Bar ===== */
 .progress-bar-container {
   width: 100%;
@@ -695,6 +701,45 @@ tbody tr:last-child td { border-bottom: none; }
   flex: 1;
   height: 1px;
   background: var(--border-color);
+}
+
+/* ===== Modals ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--surface-color);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-xl);
+  padding: 0;
+  overflow: hidden;
+  animation: slideInUp 0.3s ease-out forwards;
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.modal-body {
+  padding: 1.5rem;
 }
 
 .login-btn {

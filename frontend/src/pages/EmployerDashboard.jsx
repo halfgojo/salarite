@@ -9,6 +9,7 @@ export default function EmployerDashboard({ userId }) {
   const [priority, setPriority] = useState('Medium');
   const [assignedTo, setAssignedTo] = useState(2);
   const [toast, setToast] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
@@ -43,6 +44,7 @@ export default function EmployerDashboard({ userId }) {
       fetchTasks();
       setTitle('');
       setDescription('');
+      setIsModalOpen(false);
       showToast(`Task "${title}" assigned successfully!`);
     })
     .catch(err => {
@@ -80,8 +82,11 @@ export default function EmployerDashboard({ userId }) {
         </div>
       )}
 
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Employer Dashboard</h1>
+        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+          <PlusCircle size={18} /> New Task
+        </button>
       </div>
 
       {/* Stat Cards */}
@@ -135,47 +140,54 @@ export default function EmployerDashboard({ userId }) {
       {/* Main Grid */}
       <div className="dashboard-grid">
         <div className="flex flex-col gap-6">
-          {/* Create Task */}
-          <div className="card">
-            <div className="card-header">
-              <div className="card-title">
-                <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)' }}>
-                  <PlusCircle size={16} />
+          {/* Create Task Modal */}
+          {isModalOpen && (
+            <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+              <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-header">
+                  <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)', width: 32, height: 32, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 8 }}>
+                    <PlusCircle size={16} />
+                  </div>
+                  Create New Task
                 </div>
-                Create New Task
+                <div className="modal-body">
+                  <form onSubmit={handleCreateTask}>
+                    <div className="form-group">
+                      <label className="form-label">Task Title</label>
+                      <input required className="form-control" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Screen React Developer" />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Description</label>
+                      <textarea className="form-control" value={description} onChange={e => setDescription(e.target.value)} rows="2" placeholder="Describe the task requirements..."></textarea>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label className="form-label">Priority</label>
+                        <select className="form-control" value={priority} onChange={e => setPriority(e.target.value)}>
+                          <option value="High">🔴 High</option>
+                          <option value="Medium">🟡 Medium</option>
+                          <option value="Low">🔵 Low</option>
+                        </select>
+                      </div>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label className="form-label">Assign To</label>
+                        <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)}>
+                          <option value={2}>Virtual HR 1</option>
+                          <option value={3}>Virtual HR 2</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-4">
+                      <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                      <button type="submit" className="btn btn-primary">
+                        <PlusCircle size={18} /> Assign Task
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-            <form onSubmit={handleCreateTask}>
-              <div className="form-group">
-                <label className="form-label">Task Title</label>
-                <input required className="form-control" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Screen React Developer" />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Description</label>
-                <textarea className="form-control" value={description} onChange={e => setDescription(e.target.value)} rows="2" placeholder="Describe the task requirements..."></textarea>
-              </div>
-              <div className="flex gap-4">
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Priority</label>
-                  <select className="form-control" value={priority} onChange={e => setPriority(e.target.value)}>
-                    <option value="High">🔴 High</option>
-                    <option value="Medium">🟡 Medium</option>
-                    <option value="Low">🔵 Low</option>
-                  </select>
-                </div>
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Assign To</label>
-                  <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)}>
-                    <option value={2}>Virtual HR 1</option>
-                    <option value={3}>Virtual HR 2</option>
-                  </select>
-                </div>
-              </div>
-              <button type="submit" className="btn btn-primary btn-lg w-full">
-                <PlusCircle size={18} /> Assign Task
-              </button>
-            </form>
-          </div>
+          )}
 
           {/* Task List */}
           <div className="card">

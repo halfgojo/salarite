@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
-import { Briefcase, Users, UserCircle, Calendar, LogOut, LayoutDashboard, ClipboardList, Zap, MessageCircle, Video, User, Bell, Search, FileText, ArrowDown } from 'lucide-react';
+import { Briefcase, Users, UserCircle, Calendar, LogOut, LayoutDashboard, ClipboardList, Zap, MessageCircle, Video, User, Bell, Search, FileText, ArrowUp } from 'lucide-react';
 
 import EmployerDashboard from './pages/EmployerDashboard';
 import HRDashboard from './pages/HRDashboard';
@@ -101,25 +101,25 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <ScrollToBottom />
+        <ScrollToTop />
       </div>
     </BrowserRouter>
   );
 }
 
-function ScrollToBottom() {
-  const [isVisible, setIsVisible] = useState(true);
+function ScrollToTop() {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) return;
     
     const handleScroll = () => {
-      const bottomTolerance = 50; // pixels from bottom to hide arrow
-      if (mainContent.scrollHeight - mainContent.scrollTop - mainContent.clientHeight < bottomTolerance) {
-        setIsVisible(false);
-      } else {
+      // Show when scrolled down more than 50px
+      if (mainContent.scrollTop > 50) {
         setIsVisible(true);
+      } else {
+        setIsVisible(false);
       }
     };
     
@@ -134,11 +134,11 @@ function ScrollToBottom() {
     };
   }, []);
 
-  const scrollToBottom = () => {
+  const scrollToTop = () => {
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
       mainContent.scrollTo({
-        top: mainContent.scrollHeight,
+        top: 0,
         behavior: 'smooth'
       });
     }
@@ -148,8 +148,8 @@ function ScrollToBottom() {
 
   return (
     <button 
-      onClick={scrollToBottom}
-      title="Scroll to bottom"
+      onClick={scrollToTop}
+      title="Scroll to top"
       style={{
         position: 'fixed',
         bottom: '2rem',
@@ -167,14 +167,14 @@ function ScrollToBottom() {
         cursor: 'pointer',
         zIndex: 100,
         transition: 'all 0.2s ease',
-        animation: 'bounce 2s infinite'
+        animation: 'bounceUp 2s infinite'
       }}
-      onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(99, 102, 241, 0.3)'; }}
+      onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.4)'; }}
       onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.4)'; }}
     >
-      <ArrowDown size={20} />
+      <ArrowUp size={20} />
       <style>{`
-        @keyframes bounce {
+        @keyframes bounceUp {
           0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
           40% { transform: translateY(-6px); }
           60% { transform: translateY(-3px); }
