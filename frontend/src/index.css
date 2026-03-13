@@ -795,18 +795,18 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 .login-btn-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: #E0E7FF !important;
-  color: #6366F1 !important;
+  background: #DDD6FE !important;
+  color: #4F46E5 !important;
 }
 
-.login-btn-employer .login-btn-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
+.login-btn-employer .login-btn-icon { background: rgba(255,255,255,0.25) !important; color: white !important; }
 
 .login-footer {
   margin-top: 2rem;
