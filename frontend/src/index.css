@@ -469,6 +469,16 @@ p { color: var(--text-secondary); font-size: 0.9375rem; }
 .btn-sm { padding: 0.4375rem 0.875rem; font-size: 0.75rem; }
 .btn-lg { padding: 0.75rem 1.75rem; font-size: 0.9375rem; border-radius: var(--radius-lg); }
 
+.btn-action-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+.btn-action-hover:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.45) !important;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+}
+
 /* ===== Forms ===== */
 .form-group { margin-bottom: 1.25rem; }
 

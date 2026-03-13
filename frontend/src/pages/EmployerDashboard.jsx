@@ -82,11 +82,8 @@ export default function EmployerDashboard({ userId }) {
         </div>
       )}
 
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header">
         <h1>Employer Dashboard</h1>
-        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-          <PlusCircle size={18} /> New Task
-        </button>
       </div>
 
       {/* Stat Cards */}
@@ -198,7 +195,12 @@ export default function EmployerDashboard({ userId }) {
                 </div>
                 All Tasks
               </div>
-              <span className="badge badge-pending">{tasks.length} total</span>
+              <div className="flex items-center gap-3">
+                <span className="badge badge-pending">{tasks.length} total</span>
+                <button className="btn btn-primary btn-sm btn-action-hover" onClick={() => setIsModalOpen(true)}>
+                  <PlusCircle size={14} /> New Task
+                </button>
+              </div>
             </div>
             <div style={{ overflowX: 'auto' }}>
               <table>

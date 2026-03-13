@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ActivityFeed from '../components/ActivityFeed';
 import { PlayCircle, CheckCircle2, ClipboardList, TrendingUp, Clock, BarChart3, Inbox } from 'lucide-react';
 
 export default function HRDashboard({ userId }) {
@@ -117,69 +118,79 @@ export default function HRDashboard({ userId }) {
         </div>
       )}
 
-      {/* Task Table */}
-      <div className="card">
-        <div className="card-header">
-          <div className="card-title">
-            <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)' }}>
-              <ClipboardList size={16} />
+      {/* Main Grid */}
+      <div className="dashboard-grid">
+        <div className="flex flex-col gap-6">
+          {/* Task Table */}
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">
+                <div className="card-title-icon" style={{ background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', color: 'var(--primary)' }}>
+                  <ClipboardList size={16} />
+                </div>
+                My Tasks
+              </div>
+              <span className="badge badge-pending">{tasks.length} assigned</span>
             </div>
-            My Tasks
+
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task Details</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th style={{ textAlign: 'right' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tasks.length === 0 && (
+                    <tr><td colSpan="4">
+                      <div className="empty-state">
+                        <div className="empty-state-icon"><Inbox size={24} /></div>
+                        <p className="text-sm text-muted">No tasks assigned to you yet. Check back soon!</p>
+                      </div>
+                    </td></tr>
+                  )}
+                  {tasks.map(t => (
+                    <tr key={t.id}>
+                      <td>
+                        <div style={{ fontWeight: 600 }}>{t.title}</div>
+                        {t.description && <div className="text-xs text-muted mt-1">{t.description}</div>}
+                        {t.completed_at && (
+                          <div className="text-xs mt-1" style={{ color: 'var(--secondary)', fontWeight: 500 }}>
+                            ✓ Completed at {new Date(t.completed_at).toLocaleString()}
+                          </div>
+                        )}
+                      </td>
+                      <td><span className={`badge badge-${t.priority.toLowerCase()}`}>{t.priority}</span></td>
+                      <td>{getStatusBadge(t.status)}</td>
+                      <td style={{ textAlign: 'right' }}>
+                        {t.status === 'Pending' && (
+                          <button className="btn btn-primary btn-sm" onClick={() => updateTaskStatus(t.id, 'start', t.title)}>
+                            <PlayCircle size={14} /> Start
+                          </button>
+                        )}
+                        {t.status === 'In Progress' && (
+                          <button className="btn btn-success btn-sm" onClick={() => updateTaskStatus(t.id, 'complete', t.title)}>
+                            <CheckCircle2 size={14} /> Complete
+                          </button>
+                        )}
+                        {t.status === 'Completed' && (
+                          <span className="text-xs text-muted" style={{ fontStyle: 'italic' }}>Done</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <span className="badge badge-pending">{tasks.length} assigned</span>
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Task Details</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.length === 0 && (
-                <tr><td colSpan="4">
-                  <div className="empty-state">
-                    <div className="empty-state-icon"><Inbox size={24} /></div>
-                    <p className="text-sm text-muted">No tasks assigned to you yet. Check back soon!</p>
-                  </div>
-                </td></tr>
-              )}
-              {tasks.map(t => (
-                <tr key={t.id}>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{t.title}</div>
-                    {t.description && <div className="text-xs text-muted mt-1">{t.description}</div>}
-                    {t.completed_at && (
-                      <div className="text-xs mt-1" style={{ color: 'var(--secondary)', fontWeight: 500 }}>
-                        ✓ Completed at {new Date(t.completed_at).toLocaleString()}
-                      </div>
-                    )}
-                  </td>
-                  <td><span className={`badge badge-${t.priority.toLowerCase()}`}>{t.priority}</span></td>
-                  <td>{getStatusBadge(t.status)}</td>
-                  <td style={{ textAlign: 'right' }}>
-                    {t.status === 'Pending' && (
-                      <button className="btn btn-primary btn-sm" onClick={() => updateTaskStatus(t.id, 'start', t.title)}>
-                        <PlayCircle size={14} /> Start
-                      </button>
-                    )}
-                    {t.status === 'In Progress' && (
-                      <button className="btn btn-success btn-sm" onClick={() => updateTaskStatus(t.id, 'complete', t.title)}>
-                        <CheckCircle2 size={14} /> Complete
-                      </button>
-                    )}
-                    {t.status === 'Completed' && (
-                      <span className="text-xs text-muted" style={{ fontStyle: 'italic' }}>Done</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Activity Feed Column */}
+        <div>
+          <ActivityFeed />
         </div>
       </div>
     </div>
