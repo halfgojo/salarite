@@ -233,7 +233,7 @@ function Sidebar({ role, onLogout, isOpen, setIsOpen }) {
 
   return (
     <nav className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="sidebar-brand">
+      <Link to="/" className="sidebar-brand" onClick={() => setIsOpen && setIsOpen(false)}>
         <div className="sidebar-brand-icon">
           <Zap size={20} />
         </div>
@@ -241,7 +241,7 @@ function Sidebar({ role, onLogout, isOpen, setIsOpen }) {
           <div className="sidebar-brand-text">Salarite</div>
           <div className="sidebar-brand-sub">ATS Platform</div>
         </div>
-      </div>
+      </Link>
 
       <div className="sidebar-section-label">Navigation</div>
       {links.map(link => (
